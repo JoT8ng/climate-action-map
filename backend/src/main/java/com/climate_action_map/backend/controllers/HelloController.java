@@ -1,4 +1,4 @@
-package com.climate_action_map.backend;
+package com.climate_action_map.backend.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
