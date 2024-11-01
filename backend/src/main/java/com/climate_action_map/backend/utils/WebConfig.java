@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
 	//Get variables in ConfigProperties
 	private final ConfigProperties secretsConfig;
 	
-	//Use Autowired to make variables available globally
+	//Use Autowired to inject variables in ConfigProperties
 	@Autowired
 	public WebConfig(ConfigProperties secretsConfigProperties) {
 		this.secretsConfig = secretsConfigProperties;
