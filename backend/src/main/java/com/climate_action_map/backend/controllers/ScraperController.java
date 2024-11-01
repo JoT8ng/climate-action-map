@@ -6,13 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.hw.serpapi.GoogleSearch;
-import com.hw.serpapi.SerpApiSearch;
-import com.hw.serpapi.SerpApiSearchException;
+import serpapi.GoogleSearch;
+import serpapi.SerpApiSearchException;
+
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,31 +30,30 @@ public class ScraperController {
 	}
 	
 	@GetMapping("/scraper")
-	public ResponseEntity<String> scrapeEvents() {
+	public ResponseEntity<Object> scrapeEvents() {
 		Map<String, String> parameter = new HashMap<>();
 		
 		// parameters
 		parameter.put("engine", "google_events");
-		parameter.put("q", "Climate events in Toronto next month");
+		parameter.put("q", "Climate events in Toronto");
+		parameter.put("google_domain", "google.ca");
 		parameter.put("hl", "en");
-		parameter.put("gl", "us");
+		parameter.put("gl", "ca");
+		parameter.put("location", "Toronto, Ontario, Canada");
 		parameter.put("api_key", secretsConfig.serpapi());
 
 		// create search
-		SerpApiSearch search = new GoogleSearch(parameter);
+		GoogleSearch search = new GoogleSearch(parameter);
 
 		try {
 			// execute search
 			JsonObject results = search.getJson();
 			
-			// Extract event results array
-            JsonArray eventResults = results.getAsJsonArray("events_results");
-            
-            // Convert JSON array to String for simplicity
-            String searchResult = eventResults.toString();
-
-            // Return the result as JSON String
-            return new ResponseEntity<>(searchResult, HttpStatus.OK);
+			// Extract events_results from JSON and convert it to a compatible type
+	        JsonArray eventsResults = results.getAsJsonArray("events_results");
+	        
+	        // Convert JsonArray to a list for easier use in the ResponseEntity
+	        return new ResponseEntity<>(new Gson().fromJson(eventsResults, List.class), HttpStatus.OK);
 		} catch (SerpApiSearchException ex) {
 			System.out.println("Exception:");
 			System.out.println(ex.toString());
