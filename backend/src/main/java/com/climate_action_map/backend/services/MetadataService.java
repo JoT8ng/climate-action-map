@@ -22,9 +22,8 @@ public class MetadataService {
 	}
 	
 	// Method to get latest scrape metadata
-	public Optional<String> getLastScrapeDate() {
-        return scrapeMetadataRepository.findLatest()
-                                       .map(ScrapeMetadata::getLastScrapeDate);
+	public Optional<ScrapeMetadata> getLatestScrapeDate() {
+        return scrapeMetadataRepository.findLatest();
     }
 	
 	// Method to update and save metadata once data is scraped
