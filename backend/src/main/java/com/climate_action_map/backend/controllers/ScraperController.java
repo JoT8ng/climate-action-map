@@ -26,10 +26,8 @@ public class ScraperController {
 	@GetMapping("/scraper")
 	public ResponseEntity<Object> scrapeEvents() {
 	    try {
-	        // Fetch data from serpapi Scraper Service and save to database
+	        // Fetch data from serpapi Scraper Service and save to database, update metadata
 	    	JsonArray eventsResults = scraperService.ScrapeData();
-	    	
-	    	// Update scrape metadata database
 	    	
 	    	// Process and Geocode raw scraped data and save to database
 	
