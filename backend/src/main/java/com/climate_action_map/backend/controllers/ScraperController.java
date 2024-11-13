@@ -1,5 +1,6 @@
 package com.climate_action_map.backend.controllers;
 
+import com.climate_action_map.backend.services.ProcessedService;
 import com.climate_action_map.backend.services.ScraperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +17,13 @@ public class ScraperController {
 	
 	//Get variables and other imports
 	private final ScraperService scraperService;
+	private final ProcessedService processedService;
 	
 	//Use Autowired to inject variables
 	@Autowired
-	public ScraperController(ScraperService scraperService) {
+	public ScraperController(ScraperService scraperService, ProcessedService processedService) {
 		this.scraperService = scraperService;
+		this.processedService = processedService;
 	}
 	
 	@GetMapping("/scraper")
@@ -30,6 +33,7 @@ public class ScraperController {
 	    	JsonArray eventsResults = scraperService.ScrapeData();
 	    	
 	    	// Process and Geocode raw scraped data and save to database
+	    	processedService.processData();
 	
 	        // Convert JsonArray to List for ResponseEntity compatibility
 	        return new ResponseEntity<>(new Gson().fromJson(eventsResults, List.class), HttpStatus.OK);
