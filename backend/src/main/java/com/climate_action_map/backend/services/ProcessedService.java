@@ -20,12 +20,14 @@ public class ProcessedService {
 	//Get variables and other imports
 	private final ProcessedDataRepository processedDataRepository;
 	private final RawDataRepository rawDataRepository;
+	private final GeocodingService geocodingService;
 	
 	//Use Autowired to inject variables
 	@Autowired
-	public ProcessedService(ProcessedDataRepository processedDataRepository, RawDataRepository rawDataRepository) {
+	public ProcessedService(ProcessedDataRepository processedDataRepository, RawDataRepository rawDataRepository, GeocodingService geocodingService) {
 		this.processedDataRepository = processedDataRepository;
 		this.rawDataRepository = rawDataRepository;
+		this.geocodingService = geocodingService;
 	}
 	
 	//Method to process latest raw scraped data
@@ -49,15 +51,13 @@ public class ProcessedService {
 	                String event_name = (String) eventDoc.get("title");
 	                Document dateDoc = (Document) eventDoc.get("date");
 	                String event_date = dateDoc != null ? (String) dateDoc.get("start_date") : null;
-
 	                // Concatenate address array into a single string
 	                List<String> addressList = (List<String>) eventDoc.get("address");
 	                String address = addressList != null ? String.join(", ", addressList) : null;
-
 	                String description = (String) eventDoc.get("description");
 
-	                // Set location if available geocoding (dummy values used here)
-	                ProcessedData.Location location = new ProcessedData.Location(40.7128, -74.0060);
+	                // Geocode and set location
+	                ProcessedData.Location location = geocodingService.GeocodeData(address);
 
 	                // Create a new Event object and add it to the list
 	                ProcessedData.Event event = new ProcessedData.Event(event_name, event_date, address, description, location);

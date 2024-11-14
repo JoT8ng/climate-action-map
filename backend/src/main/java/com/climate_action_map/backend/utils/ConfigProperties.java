@@ -7,6 +7,7 @@ public record ConfigProperties(
 		String serpapi,
 		String devurl,
 		String produrl,
+		String geocodeapi,
 		String environment) {
 
 }
