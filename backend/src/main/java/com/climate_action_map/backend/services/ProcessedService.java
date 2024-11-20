@@ -77,4 +77,9 @@ public class ProcessedService {
             rawDataRepository.save(rawdata);
 		}
 	}
+	
+	// Method to get latest processed data
+	public Optional<ProcessedData> getLatestProcessedData() {
+        return processedDataRepository.findLatest();
+    }
 }
